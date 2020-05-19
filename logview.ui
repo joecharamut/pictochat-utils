@@ -1,0 +1,360 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object id="mainwindow" class="ttk.Frame">
+    <property name="borderwidth">8</property>
+    <property name="height">200</property>
+    <property name="width">200</property>
+    <layout>
+      <property name="column">0</property>
+      <property name="propagate">True</property>
+      <property name="row">0</property>
+      <rows>
+        <row id="1">
+          <property name="minsize">0</property>
+          <property name="pad">0</property>
+        </row>
+      </rows>
+    </layout>
+    <child>
+      <object id="header" class="ttk.Frame">
+        <property name="height">200</property>
+        <property name="width">400</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+        <child>
+          <object id="Label_1" class="ttk.Label">
+            <property name="text" translatable="yes">Log Viewer</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object id="file_picker" class="ttk.Frame">
+        <property name="height">200</property>
+        <property name="width">400</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+          <rows>
+            <row id="1">
+              <property name="minsize">0</property>
+            </row>
+          </rows>
+        </layout>
+        <child>
+          <object id="filename" class="ttk.Label">
+            <property name="text" translatable="yes">None</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">w</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object id="filepicker" class="ttk.Button">
+            <property name="command">on_filepicker_button</property>
+            <property name="text" translatable="yes">Choose File</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">e</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object id="Separator_1" class="ttk.Separator">
+            <property name="orient">vertical</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="padx">4</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object id="log_frame" class="ttk.Labelframe">
+        <property name="height">200</property>
+        <property name="padding">4</property>
+        <property name="text" translatable="yes">Log</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+        <child>
+          <object id="filterpanel" class="ttk.Labelframe">
+            <property name="height">200</property>
+            <property name="padding">4</property>
+            <property name="text" translatable="yes">Filters</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">w</property>
+            </layout>
+            <child>
+              <object id="typepanel" class="ttk.Labelframe">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">Message Type</property>
+                <property name="width">200</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+                <child>
+                  <object id="type_connect" class="tk.Checkbutton">
+                    <property name="command">update_tree</property>
+                    <property name="text" translatable="yes">Connect</property>
+                    <property name="variable">boolean:typevar_connect</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">0</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="type_status" class="tk.Checkbutton">
+                    <property name="command">update_tree</property>
+                    <property name="text" translatable="yes">Status</property>
+                    <property name="variable">boolean:typevar_status</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">1</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="type_username" class="tk.Checkbutton">
+                    <property name="command">update_tree</property>
+                    <property name="text" translatable="yes">Username</property>
+                    <property name="variable">boolean:typevar_username</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">2</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="type_join" class="tk.Checkbutton">
+                    <property name="command">update_tree</property>
+                    <property name="text" translatable="yes">Join</property>
+                    <property name="variable">boolean:typevar_join</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">3</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="type_disconnect" class="tk.Checkbutton">
+                    <property name="command">update_tree</property>
+                    <property name="text" translatable="yes">Disconnect</property>
+                    <property name="variable">boolean:typevar_disconnect</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">4</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="type_message" class="tk.Checkbutton">
+                    <property name="command">update_tree</property>
+                    <property name="text" translatable="yes">Message</property>
+                    <property name="variable">boolean:typevar_message</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">5</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object id="roompanel" class="ttk.Labelframe">
+                <property name="height">200</property>
+                <property name="text" translatable="yes">Message Room</property>
+                <property name="width">200</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                </layout>
+                <child>
+                  <object id="room_s" class="tk.Checkbutton">
+                    <property name="text" translatable="yes">Server</property>
+                    <property name="variable">boolean:roomvar_s</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">0</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="room_a" class="tk.Checkbutton">
+                    <property name="text" translatable="yes">Room A</property>
+                    <property name="variable">boolean:roomvar_a</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">1</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="room_b" class="tk.Checkbutton">
+                    <property name="text" translatable="yes">Room B</property>
+                    <property name="variable">boolean:roomvar_b</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">2</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="room_c" class="tk.Checkbutton">
+                    <property name="text" translatable="yes">Room C</property>
+                    <property name="variable">boolean:roomvar_c</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">3</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="room_d" class="tk.Checkbutton">
+                    <property name="text" translatable="yes">Room D</property>
+                    <property name="variable">boolean:roomvar_d</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">4</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object id="mpanel" class="ttk.Labelframe">
+            <property name="height">200</property>
+            <property name="padding">4</property>
+            <property name="text" translatable="yes">Messages</property>
+            <property name="width">200</property>
+            <layout>
+              <property name="column">2</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+            <child>
+              <object id="mframe" class="ttk.Frame">
+                <property name="height">200</property>
+                <property name="padding">4</property>
+                <property name="relief">raised</property>
+                <property name="width">200</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+                <child>
+                  <object id="message_text" class="tk.Text">
+                    <property name="height">7</property>
+                    <property name="state">disabled</property>
+                    <property name="width">35</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">0</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="message_image" class="ttk.Label">
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">1</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object id="Separator_2" class="ttk.Separator">
+                <property name="orient">vertical</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="padx">4</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object id="message_list" class="ttk.Treeview">
+                <property name="padding">4</property>
+                <property name="selectmode">browse</property>
+                <property name="show">headings</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object id="Separator_3" class="ttk.Separator">
+            <property name="orient">vertical</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="padx">4</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -1,0 +1,6 @@
+appdirs==1.4.4
+asyncio==3.4.3
+Pillow==7.1.2
+pygubu==0.9.8.6
+pyotp==2.3.0
+websockets==8.1

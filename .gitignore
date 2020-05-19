@@ -1,0 +1,7 @@
+env
+__pycache__
+
+logs
+log.json
+banlist.txt
+admin.secret
