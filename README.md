@@ -3,7 +3,7 @@
 misc utils for pictochat thing
 
 
-server: sockettest.py
+server: server.py
 
 log viewer: logview.py
 
