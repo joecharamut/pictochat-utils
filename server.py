@@ -63,6 +63,11 @@ class Logger:
             await asyncio.sleep(0.5)
 
 
+if not os.path.exists("admin.secret"):
+    with open("admin.secret", "w") as f:
+        f.write(pyotp.random_base32())
+    print("admin secret created")
+
 ADMIN_TOTP = pyotp.TOTP(open("admin.secret", "r").read().strip())
 def check_totp(p):
     return ADMIN_TOTP.verify(p)
