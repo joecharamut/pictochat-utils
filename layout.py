@@ -20,6 +20,8 @@ def serialize(objects):
 
         json_obj["type"] = type(obj).__name__
         json_obj["id"] = obj.id
+        json_obj["variant"] = obj.variant
+        json_obj["enabled"] = obj.enabled
         json_obj["x"] = obj.x
         json_obj["y"] = obj.y
 
@@ -52,6 +54,8 @@ def deserialize(string):
             img = Image.open(json_obj["props"]["image"]) if json_obj["props"]["image"] else ObjectImage.BLANK_IMAGE
             obj = ObjectButton(json_obj["id"], img, json_obj["props"]["tint"])
 
+        obj.variant = json_obj["variant"]
+        obj.enabled = json_obj["enabled"]
         obj.x = json_obj["x"]
         obj.y = json_obj["y"]
         resolved_out.append(obj)
@@ -65,6 +69,8 @@ class LayoutObject():
         self.y = 0
         self.w = 0
         self.h = 0
+        self.variant = "default"
+        self.enabled = True
         self.id = id
         self.canvas_id = None
         self.tree_id = None
@@ -80,6 +86,16 @@ class LayoutObject():
                 object.state(["!disabled"])
                 object.delete(0, tk.END)
                 object.insert(0, self.id)
+            elif name == "variant":
+                object.state(["!disabled"])
+                object.delete(0, tk.END)
+                object.insert(0, self.variant)
+            elif name == "enabled":
+                object.state(["!disabled"])
+                if self.enabled:
+                    object.state(["selected"])
+                else:
+                    object.state(["!selected"])
             elif name == "x":
                 object.state(["!disabled"])
                 object.set(self.x)
@@ -163,8 +179,10 @@ class LayoutApp():
 
         self.properties = {
             "id": self.builder.get_object("prop_id_input"),
+            "variant": self.builder.get_object("prop_variant_input"),
             "x": self.builder.get_object("prop_x_input"),
             "y": self.builder.get_object("prop_y_input"),
+            "enabled": self.builder.get_object("prop_enabled_input"),
             "image": self.builder.get_object("prop_image_select"),
             "image_name": self.builder.get_object("prop_image_input"),
             "tint": self.builder.get_object("prop_tint_input"),
@@ -187,6 +205,9 @@ class LayoutApp():
 
     def run(self):
         self.mainwindow.mainloop()
+
+    def validate_number(self, newtext):
+        return re.match(r"^[0-9]*$", newtext) != None
 
     def open_callback(self):
         select = tkfd.askopenfilename(
@@ -409,7 +430,7 @@ class LayoutApp():
     def refresh_tree(self):
         self.object_tree.delete(*self.object_tree.get_children())
         for object in self.objects:
-            object.tree_id = self.object_tree.insert("", "end", text=object.id, values=(type(object).__name__))
+            object.tree_id = self.object_tree.insert("", "end", text=object.id, values=(type(object).__name__, object.variant, object.enabled))
 
         if self.selected_object:
             self.object_tree.focus(self.selected_object.tree_id)
@@ -422,13 +443,15 @@ class LayoutApp():
         for object in self.objects:
             object.selected = False
         if self.selected_object:
-            self.selected_object.selected = True
+            if self.selected_object.enabled:
+                self.selected_object.selected = True
 
         canvas = self.canvas
         canvas.delete(tk.ALL)
 
         for object in self.objects:
-            object.draw(canvas)
+            if object.enabled:
+                object.draw(canvas)
 
     def refresh_props(self):
         for name, prop in self.properties.items():
@@ -462,6 +485,23 @@ class LayoutApp():
             if re.match("^#[0-9A-Fa-f]{6}$", new_tint):
                 self.selected_object.tint = new_tint
                 self.selected_object.set_props(self.properties)
+
+    def variant_unfocus_callback(self, event):
+        if self.selected_object:
+            new_variant = self.builder.get_variable("prop_variant_var").get().strip()
+            new_variant = re.sub("[^A-Za-z0-9-_]", "", new_variant)
+            if new_variant:
+                self.selected_object.variant = new_variant
+            else:
+                self.selected_object.variant = "default"
+            self.selected_object.set_props(self.properties)
+            self.refresh_tree()
+
+    def prop_enabled_callback(self):
+        if self.selected_object:
+            self.selected_object.enabled = self.builder.get_variable("prop_enabled_var").get()
+            self.selected_object.set_props(self.properties)
+            self.refresh_tree()
 
     def x_change_callback(self):
         self.selected_object.x = self.builder.get_variable("prop_x_var").get()

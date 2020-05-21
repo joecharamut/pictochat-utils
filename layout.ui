@@ -135,7 +135,7 @@
                 </layout>
                 <child>
                   <object id="props_basedir" class="ttk.Label">
-                    <property name="text" translatable="yes">Base Image Dir:</property>
+                    <property name="text" translatable="yes">Base Image Dir: </property>
                     <layout>
                       <property name="column">0</property>
                       <property name="propagate">True</property>
@@ -151,7 +151,6 @@
                     <property name="width">36</property>
                     <layout>
                       <property name="column">1</property>
-                      <property name="padx">8</property>
                       <property name="propagate">True</property>
                       <property name="row">0</property>
                     </layout>
@@ -170,78 +169,56 @@
                     </layout>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object id="p_variant_frame" class="ttk.Labelframe">
-                <property name="height">200</property>
-                <property name="padding">4</property>
-                <property name="text" translatable="yes">Variants</property>
-                <property name="width">200</property>
-                <layout>
-                  <property name="column">0</property>
-                  <property name="propagate">True</property>
-                  <property name="row">3</property>
-                  <columns>
-                    <column id="1">
-                      <property name="pad">0</property>
-                    </column>
-                  </columns>
-                </layout>
                 <child>
-                  <object id="props_variant_tree" class="ttk.Treeview">
-                    <property name="height">6</property>
-                    <property name="selectmode">browse</property>
+                  <object id="props_width" class="ttk.Label">
+                    <property name="text" translatable="yes">Width: </property>
                     <layout>
                       <property name="column">0</property>
                       <property name="propagate">True</property>
                       <property name="row">1</property>
+                      <property name="sticky">w</property>
                     </layout>
-                    <child>
-                      <object id="props_variant_id" class="ttk.Treeview.Column">
-                        <property name="column_anchor">w</property>
-                        <property name="heading_anchor">w</property>
-                        <property name="minwidth">20</property>
-                        <property name="stretch">true</property>
-                        <property name="text" translatable="yes">id</property>
-                        <property name="tree_column">true</property>
-                        <property name="visible">true</property>
-                        <property name="width">175</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
                 <child>
-                  <object id="p_v_buttons" class="ttk.Frame">
-                    <property name="height">200</property>
-                    <property name="width">200</property>
+                  <object id="props_width_input" class="ttk.Entry">
+                    <property name="text" translatable="yes">256</property>
+                    <property name="textvariable">string:props_width_var</property>
+                    <property name="validate">all</property>
+                    <property name="validatecommand">validate_number</property>
+                    <property name="validatecommand_args">%P</property>
                     <layout>
                       <property name="column">1</property>
                       <property name="propagate">True</property>
                       <property name="row">1</property>
-                      <property name="sticky">n</property>
+                      <property name="sticky">w</property>
                     </layout>
-                    <child>
-                      <object id="variant_new" class="ttk.Button">
-                        <property name="text" translatable="yes">New</property>
-                        <layout>
-                          <property name="column">0</property>
-                          <property name="propagate">True</property>
-                          <property name="row">0</property>
-                        </layout>
-                      </object>
-                    </child>
-                    <child>
-                      <object id="variant_delete" class="ttk.Button">
-                        <property name="text" translatable="yes">Delete</property>
-                        <layout>
-                          <property name="column">0</property>
-                          <property name="pady">4</property>
-                          <property name="propagate">True</property>
-                          <property name="row">1</property>
-                        </layout>
-                      </object>
-                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object id="props_height" class="ttk.Label">
+                    <property name="text" translatable="yes">Height: </property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="propagate">True</property>
+                      <property name="row">2</property>
+                      <property name="sticky">w</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object id="props_height_input" class="ttk.Entry">
+                    <property name="text" translatable="yes">384</property>
+                    <property name="textvariable">string:props_height_var</property>
+                    <property name="validate">all</property>
+                    <property name="validatecommand">validate_number</property>
+                    <property name="validatecommand_args">%P</property>
+                    <layout>
+                      <property name="column">1</property>
+                      <property name="propagate">True</property>
+                      <property name="row">2</property>
+                      <property name="sticky">w</property>
+                    </layout>
                   </object>
                 </child>
               </object>
@@ -451,7 +428,7 @@
                         <property name="text" translatable="yes">Object ID</property>
                         <property name="tree_column">true</property>
                         <property name="visible">true</property>
-                        <property name="width">150</property>
+                        <property name="width">140</property>
                       </object>
                     </child>
                     <child>
@@ -464,6 +441,30 @@
                         <property name="tree_column">false</property>
                         <property name="visible">true</property>
                         <property name="width">100</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="object_variant" class="ttk.Treeview.Column">
+                        <property name="column_anchor">w</property>
+                        <property name="heading_anchor">w</property>
+                        <property name="minwidth">20</property>
+                        <property name="stretch">true</property>
+                        <property name="text" translatable="yes">Variant</property>
+                        <property name="tree_column">false</property>
+                        <property name="visible">true</property>
+                        <property name="width">100</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="object_enabled" class="ttk.Treeview.Column">
+                        <property name="column_anchor">w</property>
+                        <property name="heading_anchor">w</property>
+                        <property name="minwidth">20</property>
+                        <property name="stretch">true</property>
+                        <property name="text" translatable="yes">Enabled</property>
+                        <property name="tree_column">false</property>
+                        <property name="visible">true</property>
+                        <property name="width">75</property>
                       </object>
                     </child>
                   </object>
@@ -494,155 +495,234 @@
                   <property name="row">2</property>
                 </layout>
                 <child>
-                  <object id="prop_id" class="ttk.Label">
-                    <property name="text" translatable="yes">ID: </property>
+                  <object id="prop_general_frame" class="ttk.Labelframe">
+                    <property name="height">200</property>
+                    <property name="padding">4</property>
+                    <property name="text" translatable="yes">General</property>
+                    <property name="width">200</property>
                     <layout>
                       <property name="column">0</property>
-                      <property name="ipadx">8</property>
                       <property name="propagate">True</property>
-                      <property name="row">0</property>
+                      <property name="row">8</property>
                       <property name="sticky">w</property>
                     </layout>
+                    <child>
+                      <object id="prop_id" class="ttk.Label">
+                        <property name="text" translatable="yes">ID: </property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="ipadx">8</property>
+                          <property name="propagate">True</property>
+                          <property name="row">0</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_id_input" class="ttk.Entry">
+                        <property name="textvariable">string:prop_id_var</property>
+                        <bind sequence="&lt;FocusOut&gt;" handler="id_unfocus_callback" add="" />
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">0</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_x" class="ttk.Label">
+                        <property name="text" translatable="yes">X: </property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="ipadx">8</property>
+                          <property name="propagate">True</property>
+                          <property name="row">2</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_x_input" class="ttk.Spinbox">
+                        <property name="command">x_change_callback</property>
+                        <property name="from_">0</property>
+                        <property name="increment">1</property>
+                        <property name="textvariable">int:prop_x_var</property>
+                        <property name="to">256</property>
+                        <property name="width">4</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">2</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_y" class="ttk.Label">
+                        <property name="text" translatable="yes">Y: </property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="ipadx">8</property>
+                          <property name="propagate">True</property>
+                          <property name="row">3</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_y_input" class="ttk.Spinbox">
+                        <property name="command">y_change_callback</property>
+                        <property name="from_">0</property>
+                        <property name="increment">1</property>
+                        <property name="textvariable">int:prop_y_var</property>
+                        <property name="to">384</property>
+                        <property name="width">4</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">3</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_variant" class="ttk.Label">
+                        <property name="text" translatable="yes">Variant:</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="propagate">True</property>
+                          <property name="row">1</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_variant_input" class="ttk.Entry">
+                        <property name="text" translatable="yes">default</property>
+                        <property name="textvariable">string:prop_variant_var</property>
+                        <bind sequence="&lt;FocusOut&gt;" handler="variant_unfocus_callback" add="" />
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">1</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_enabled" class="ttk.Label">
+                        <property name="text" translatable="yes">Enabled:</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="propagate">True</property>
+                          <property name="row">4</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_enabled_input" class="ttk.Checkbutton">
+                        <property name="command">prop_enabled_callback</property>
+                        <property name="offvalue">False</property>
+                        <property name="onvalue">True</property>
+                        <property name="variable">boolean:prop_enabled_var</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">4</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object id="prop_id_input" class="ttk.Entry">
-                    <property name="textvariable">string:prop_id_var</property>
-                    <bind sequence="&lt;FocusOut&gt;" handler="id_unfocus_callback" add="" />
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="propagate">True</property>
-                      <property name="row">0</property>
-                      <property name="sticky">e</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_x" class="ttk.Label">
-                    <property name="text" translatable="yes">X: </property>
+                  <object id="prop_class_frame" class="ttk.Labelframe">
+                    <property name="height">200</property>
+                    <property name="padding">4</property>
+                    <property name="text" translatable="yes">Class</property>
+                    <property name="width">200</property>
                     <layout>
                       <property name="column">0</property>
-                      <property name="ipadx">8</property>
                       <property name="propagate">True</property>
-                      <property name="row">1</property>
+                      <property name="row">9</property>
                       <property name="sticky">w</property>
                     </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_x_input" class="ttk.Spinbox">
-                    <property name="command">x_change_callback</property>
-                    <property name="from_">0</property>
-                    <property name="increment">1</property>
-                    <property name="textvariable">int:prop_x_var</property>
-                    <property name="to">256</property>
-                    <property name="width">4</property>
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="propagate">True</property>
-                      <property name="row">1</property>
-                      <property name="sticky">e</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_y" class="ttk.Label">
-                    <property name="text" translatable="yes">Y: </property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="ipadx">8</property>
-                      <property name="propagate">True</property>
-                      <property name="row">2</property>
-                      <property name="sticky">w</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_y_input" class="ttk.Spinbox">
-                    <property name="command">y_change_callback</property>
-                    <property name="from_">0</property>
-                    <property name="increment">1</property>
-                    <property name="textvariable">int:prop_y_var</property>
-                    <property name="to">384</property>
-                    <property name="width">4</property>
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="propagate">True</property>
-                      <property name="row">2</property>
-                      <property name="sticky">e</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_image" class="ttk.Label">
-                    <property name="text" translatable="yes">Image: </property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="ipadx">4</property>
-                      <property name="propagate">True</property>
-                      <property name="row">3</property>
-                      <property name="sticky">w</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_image_input" class="ttk.Entry">
-                    <property name="text" translatable="yes">None</property>
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="propagate">True</property>
-                      <property name="row">3</property>
-                      <property name="sticky">e</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_image_select" class="ttk.Button">
-                    <property name="command">image_select_callback</property>
-                    <property name="text" translatable="yes">...</property>
-                    <property name="width">2</property>
-                    <layout>
-                      <property name="column">2</property>
-                      <property name="propagate">True</property>
-                      <property name="row">3</property>
-                      <property name="sticky">w</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_tint" class="ttk.Label">
-                    <property name="text" translatable="yes">Hover Tint:</property>
-                    <layout>
-                      <property name="column">0</property>
-                      <property name="ipadx">4</property>
-                      <property name="propagate">True</property>
-                      <property name="row">4</property>
-                      <property name="sticky">w</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_tint_input" class="ttk.Entry">
-                    <property name="textvariable">string:prop_tint_var</property>
-                    <bind sequence="&lt;FocusOut&gt;" handler="tint_unfocus_callback" add="" />
-                    <layout>
-                      <property name="column">1</property>
-                      <property name="propagate">True</property>
-                      <property name="row">4</property>
-                      <property name="sticky">e</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object id="prop_tint_preview" class="tk.Canvas">
-                    <property name="background">#ffffff</property>
-                    <property name="height">16</property>
-                    <property name="width">16</property>
-                    <layout>
-                      <property name="column">2</property>
-                      <property name="propagate">True</property>
-                      <property name="row">4</property>
-                    </layout>
+                    <child>
+                      <object id="prop_image" class="ttk.Label">
+                        <property name="text" translatable="yes">Image: </property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="ipadx">4</property>
+                          <property name="propagate">True</property>
+                          <property name="row">0</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_image_input" class="ttk.Entry">
+                        <property name="text" translatable="yes">None</property>
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">0</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_image_select" class="ttk.Button">
+                        <property name="command">image_select_callback</property>
+                        <property name="text" translatable="yes">...</property>
+                        <property name="width">2</property>
+                        <layout>
+                          <property name="column">2</property>
+                          <property name="propagate">True</property>
+                          <property name="row">0</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_tint" class="ttk.Label">
+                        <property name="text" translatable="yes">Hover Tint:</property>
+                        <layout>
+                          <property name="column">0</property>
+                          <property name="ipadx">4</property>
+                          <property name="propagate">True</property>
+                          <property name="row">1</property>
+                          <property name="sticky">w</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_tint_input" class="ttk.Entry">
+                        <property name="textvariable">string:prop_tint_var</property>
+                        <bind sequence="&lt;FocusOut&gt;" handler="tint_unfocus_callback" add="" />
+                        <layout>
+                          <property name="column">1</property>
+                          <property name="propagate">True</property>
+                          <property name="row">1</property>
+                          <property name="sticky">e</property>
+                        </layout>
+                      </object>
+                    </child>
+                    <child>
+                      <object id="prop_tint_preview" class="tk.Canvas">
+                        <property name="background">#ffffff</property>
+                        <property name="height">16</property>
+                        <property name="highlightbackground">#333333</property>
+                        <property name="width">16</property>
+                        <layout>
+                          <property name="column">2</property>
+                          <property name="propagate">True</property>
+                          <property name="row">1</property>
+                          <property name="sticky">s</property>
+                        </layout>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
