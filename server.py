@@ -103,6 +103,22 @@ async def set_ban(ip):
     with open("banlist.txt", "w") as f:
         f.write(json.dumps(bans))
 
+MOTD = ""
+async def get_motd():
+    global MOTD
+    if not MOTD:
+        if not os.path.exists("motd.txt"):
+            await set_motd("Welcome to Pictochat!")
+        with open("motd.txt", "r") as f:
+            MOTD = f.read().strip()
+    return MOTD
+
+async def set_motd(new_motd):
+    global MOTD
+    MOTD = new_motd
+    with open("motd.txt", "w") as f:
+        f.write(MOTD)
+
 LOGGER = Logger()
 USERS = set()
 USERNAMES = {}
@@ -264,6 +280,13 @@ async def send_sys_message(websocket, message):
         }
     }))
 
+async def broadcast_message(message):
+    m_json = {"type": 8, "user": "[SYSTEM]", "data": message}
+    await send_message("A", m_json, None)
+    await send_message("B", m_json, None)
+    await send_message("C", m_json, None)
+    await send_message("D", m_json, None)
+
 async def admin_command(websocket, data):
     message = data["message"]["data"]
     if not message.startswith("%admin"):
@@ -286,15 +309,9 @@ async def admin_command(websocket, data):
         if command == "deauth":
             AUTH_USERS[websocket] = False
             await send_sys_message(websocket, "Deauthenticated")
-            return True
         elif command == "bcast":
             bmsg = " ".join(args)
-            m_json = {"type": 8, "user": "[SYSTEM]", "data": bmsg}
-            await send_message("A", m_json, None)
-            await send_message("B", m_json, None)
-            await send_message("C", m_json, None)
-            await send_message("D", m_json, None)
-            return True
+            await broadcast_message(bmsg)
         elif command == "kick":
             for sock, name in USERNAMES.items():
                 if name == args[0]:
@@ -304,7 +321,6 @@ async def admin_command(websocket, data):
                     break
             else:
                 await send_sys_message(websocket, "User not found")
-            return True
         elif command == "ban":
             for sock, name in USERNAMES.items():
                 if name == args[0]:
@@ -313,7 +329,11 @@ async def admin_command(websocket, data):
                     break
             else:
                 await send_sys_message(websocket, "User not found")
-            return True
+        elif command == "motd":
+            message = " ".join(args)
+            await set_motd(message)
+            await send_sys_message(websocket, "Success")
+        return True # always consume message if authed
     return False
 
 async def preflight_ws_message(message):
@@ -386,6 +406,11 @@ async def app(websocket, path):
 
     await LOGGER.log({"action": "connect", "remote": websocket.remote_address})
     await register(websocket)
+    await websocket.send(json.dumps({
+        "type": "message",
+        "message": {"type": 8, "user": "[SYSTEM]", "data": await get_motd()}
+    }))
+
     try:
         async for message in websocket:
             data = await preflight_ws_message(message)
