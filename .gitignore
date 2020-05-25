@@ -1,8 +1,14 @@
+# python
 env
 __pycache__
 
+# server
 logs
 log.json
 banlist.txt
 admin.secret
 motd.txt
+
+# layout editor
+layout.conf
+*.layout

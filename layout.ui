@@ -183,10 +183,11 @@
                 <child>
                   <object id="props_width_input" class="ttk.Entry">
                     <property name="text" translatable="yes">256</property>
-                    <property name="textvariable">string:props_width_var</property>
+                    <property name="textvariable">int:props_width_var</property>
                     <property name="validate">all</property>
                     <property name="validatecommand">validate_number</property>
                     <property name="validatecommand_args">%P</property>
+                    <bind sequence="&lt;FocusOut&gt;" handler="props_width_callback" add="" />
                     <layout>
                       <property name="column">1</property>
                       <property name="propagate">True</property>
@@ -209,10 +210,11 @@
                 <child>
                   <object id="props_height_input" class="ttk.Entry">
                     <property name="text" translatable="yes">384</property>
-                    <property name="textvariable">string:props_height_var</property>
+                    <property name="textvariable">int:props_height_var</property>
                     <property name="validate">all</property>
                     <property name="validatecommand">validate_number</property>
                     <property name="validatecommand_args">%P</property>
+                    <bind sequence="&lt;FocusOut&gt;" handler="props_height_callback" add="" />
                     <layout>
                       <property name="column">1</property>
                       <property name="propagate">True</property>
@@ -769,7 +771,7 @@
                     <layout>
                       <property name="column">0</property>
                       <property name="propagate">True</property>
-                      <property name="row">0</property>
+                      <property name="row">2</property>
                     </layout>
                   </object>
                 </child>

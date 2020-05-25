@@ -1,5 +1,6 @@
 import json
 import re
+import os
 
 import tkinter as tk
 from tkinter import filedialog as tkfd
@@ -8,59 +9,6 @@ from tkinter import simpledialog as tksd
 
 import pygubu
 from PIL import Image, ImageTk, ImageOps, ImageChops
-
-
-def serialize(objects):
-    json_out = {}
-
-    json_out["objects"] = []
-
-    for obj in objects:
-        json_obj = {}
-
-        json_obj["type"] = type(obj).__name__
-        json_obj["id"] = obj.id
-        json_obj["variant"] = obj.variant
-        json_obj["enabled"] = obj.enabled
-        json_obj["x"] = obj.x
-        json_obj["y"] = obj.y
-
-        if type(obj) == ObjectImage:
-            json_obj["props"] = {
-                "image": obj.image_path
-            }
-        elif type(obj) == ObjectButton:
-            json_obj["props"] = {
-                "image": obj.image_path,
-                "tint": obj.tint
-            }
-
-        json_out["objects"].append(json_obj)
-
-    return json.dumps(json_out)
-
-def deserialize(string):
-    json_in = json.loads(string)
-    resolved_out = []
-
-    for json_obj in json_in["objects"]:
-        type =  json_obj["type"]
-        obj = None
-
-        if type == "ObjectImage":
-            img = Image.open(json_obj["props"]["image"]) if json_obj["props"]["image"] else ObjectImage.BLANK_IMAGE
-            obj = ObjectImage(json_obj["id"], img)
-        elif type == "ObjectButton":
-            img = Image.open(json_obj["props"]["image"]) if json_obj["props"]["image"] else ObjectImage.BLANK_IMAGE
-            obj = ObjectButton(json_obj["id"], img, json_obj["props"]["tint"])
-
-        obj.variant = json_obj["variant"]
-        obj.enabled = json_obj["enabled"]
-        obj.x = json_obj["x"]
-        obj.y = json_obj["y"]
-        resolved_out.append(obj)
-
-    return resolved_out
 
 
 class LayoutObject():
@@ -109,6 +57,7 @@ class ObjectImage(LayoutObject):
     def __init__(self, id, image):
         super().__init__(id)
         self.image_path = ""
+        self.image_real_path = ""
         self.set_image(image)
 
     def set_image(self, image):
@@ -137,7 +86,7 @@ class ObjectImage(LayoutObject):
                 object.state(["disabled"])
 
     def refresh_image(self):
-        self.set_image(Image.open(self.image_path))
+        self.set_image(Image.open(self.image_real_path))
 
 class ObjectButton(ObjectImage):
     def __init__(self, id, image, tint):
@@ -176,6 +125,8 @@ class LayoutApp():
         self.canvas = self.builder.get_object("layout_canvas")
 
         self.objects = []
+        self.width = 256
+        self.height = 384
 
         self.properties = {
             "id": self.builder.get_object("prop_id_input"),
@@ -200,11 +151,92 @@ class LayoutApp():
 
         self.the_file = None
 
+        self.img_root = None
+        self.load_conf()
+
         self.refresh_canvas()
         self.refresh_props()
 
     def run(self):
+        if not self.img_root:
+            self.mainwindow.after(10, self.menu_properties)
         self.mainwindow.mainloop()
+
+    def save_conf(self):
+        with open("layout.conf", "w") as f:
+            json_o = {
+                "img_root": self.img_root,
+            }
+            f.write(json.dumps(json_o))
+
+    def load_conf(self):
+        if os.path.exists("layout.conf"):
+            with open("layout.conf", "r") as f:
+                json_f = json.loads(f.read())
+            self.img_root = json_f["img_root"]
+
+    def serialize(self, objects):
+        json_out = {}
+
+        json_out["objects"] = []
+        json_out["w"] = self.width
+        json_out["h"] = self.height
+
+        for obj in objects:
+            json_obj = {}
+
+            json_obj["type"] = type(obj).__name__
+            json_obj["id"] = obj.id
+            json_obj["variant"] = obj.variant
+            json_obj["enabled"] = obj.enabled
+            json_obj["x"] = obj.x
+            json_obj["y"] = obj.y
+
+            if type(obj) == ObjectImage:
+                json_obj["props"] = {
+                    "image": obj.image_path
+                }
+            elif type(obj) == ObjectButton:
+                json_obj["props"] = {
+                    "image": obj.image_path,
+                    "tint": obj.tint
+                }
+
+            json_out["objects"].append(json_obj)
+
+        return json.dumps(json_out)
+
+    def deserialize(self, string):
+        json_in = json.loads(string)
+        resolved_out = []
+
+        for json_obj in json_in["objects"]:
+            type =  json_obj["type"]
+            obj = None
+
+            if type == "ObjectImage":
+                path = self.img_root + "/" + json_obj["props"]["image"]
+                img = Image.open(path) if json_obj["props"]["image"] else ObjectImage.BLANK_IMAGE
+                obj = ObjectImage(json_obj["id"], img)
+                obj.image_path = json_obj["props"]["image"]
+                obj.image_real_path = path
+            elif type == "ObjectButton":
+                path = self.img_root + "/" + json_obj["props"]["image"]
+                img = Image.open(path) if json_obj["props"]["image"] else ObjectImage.BLANK_IMAGE
+                obj = ObjectButton(json_obj["id"], img, json_obj["props"]["tint"])
+                obj.image_path = json_obj["props"]["image"]
+                obj.image_real_path = path
+
+            obj.variant = json_obj["variant"]
+            obj.enabled = json_obj["enabled"]
+            obj.x = json_obj["x"]
+            obj.y = json_obj["y"]
+            resolved_out.append(obj)
+
+        self.width = json_in["w"]
+        self.height = json_in["h"]
+
+        return resolved_out
 
     def validate_number(self, newtext):
         return re.match(r"^[0-9]*$", newtext) != None
@@ -216,7 +248,7 @@ class LayoutApp():
         if select:
             self.the_file = select
             with open(self.the_file, "r") as f:
-                self.objects = deserialize(f.read())
+                self.objects = self.deserialize(f.read())
             self.selected_object = None
             self.refresh_tree()
             self.refresh_canvas()
@@ -226,13 +258,14 @@ class LayoutApp():
         if not self.the_file:
             return self.saveas_callback()
         with open(self.the_file, "w") as f:
-            f.write(serialize(self.objects))
+            f.write(self.serialize(self.objects))
         return True
 
     def saveas_callback(self):
         select = tkfd.asksaveasfilename(
             filetypes=(("layout files", "*.layout"),("all files","*.*")),
-            defaultextension=".layout"
+            defaultextension=".layout",
+            initialdir=self.img_root
         )
         if select:
             self.the_file = select
@@ -279,20 +312,39 @@ class LayoutApp():
         ...
 
     def menu_properties(self):
+        if self.img_root:
+            object = self.builder.get_object("props_basedir_path")
+            object.state(["!readonly"])
+            object.delete(0, tk.END)
+            object.insert(0, self.img_root)
+            object.state(["readonly"])
+
+        self.builder.get_variable("props_width_var").set(self.width)
+        self.builder.get_variable("props_height_var").set(self.height)
+
         self.prop_dialog.show()
 
     def props_close_callback(self):
         self.prop_dialog.close()
 
     def props_select_base_dir_callback(self):
-        select = tkfd.askdirectory(mustexist=True, parent=self.prop_dialog.toplevel)
+        select = tkfd.askdirectory(mustexist=True, parent=self.prop_dialog.toplevel, initialdir=self.img_root)
         if select:
-            self.base_dir = select
+            self.img_root = select
+            self.save_conf()
             object = self.builder.get_object("props_basedir_path")
             object.state(["!readonly"])
             object.delete(0, tk.END)
             object.insert(0, select)
             object.state(["readonly"])
+
+    def props_width_callback(self, event):
+        self.width = self.builder.get_variable("props_width_var").get()
+        self.canvas.configure(width=self.width, height=self.height)
+
+    def props_height_callback(self, event):
+        self.height = self.builder.get_variable("props_height_var").get()
+        self.canvas.configure(width=self.width, height=self.height)
 
     def get_selected_index(self):
         for i, object in enumerate(self.objects):
@@ -514,9 +566,12 @@ class LayoutApp():
         self.selected_object.set_props(self.properties)
 
     def image_select_callback(self):
-        selection = tkfd.askopenfilename(filetypes=(("png files", "*.png"),("all files","*.*")))
+        selection = tkfd.askopenfilename(filetypes=(("png files", "*.png"),("all files","*.*")), initialdir=self.img_root)
         if len(selection) > 0:
-            self.selected_object.image_path = selection
+            if not selection.startswith(self.img_root):
+                tkmb.showerror("Invalid Path", f"Selected file '{selection}' invalid (not child of image root)")
+            self.selected_object.image_path = selection[len(self.img_root) + 1:]
+            self.selected_object.image_real_path = selection
             self.selected_object.refresh_image()
             self.selected_object.set_props(self.properties)
             self.refresh_canvas()
