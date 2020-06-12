@@ -8,6 +8,7 @@ log.json
 banlist.txt
 admin.secret
 motd.txt
+*.pem
 
 # layout editor
 layout.conf

@@ -446,7 +446,12 @@ async def app(websocket, path):
     await LOGGER.log({"action": "disconnect", "remote": websocket.remote_address})
 
 address = ("0.0.0.0", 8069)
-start_server = websockets.serve(app, address[0], address[1])
+ssl_context = None
+if os.path.exists("fullchain.pem") and os.path.exists("privkey.pem"):
+    import ssl
+    ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    ssl_context.load_cert_chain("fullchain.pem", "privkey.pem")
+start_server = websockets.serve(app, address[0], address[1], ssl=ssl_context)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
