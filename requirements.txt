@@ -3,4 +3,4 @@ asyncio==3.4.3
 Pillow==8.3.2
 pygubu==0.9.8.6
 pyotp==2.3.0
-websockets==8.1
+websockets==9.1
